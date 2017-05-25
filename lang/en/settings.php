@@ -5,7 +5,7 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Esther Brunner <wikidesign@gmail.com>
  */
- 
+
 // for the configuration manager
 $lang['namespace']      = 'Default namespace for tags';
 $lang['toolbar_icon']   = 'Show toolbar icon (clear data/cache/* and browser cache if it\'s not displayed)';
@@ -30,5 +30,6 @@ $lang['tags_list_css']           = 'Choose style applied to pages\' tags list';
 $lang['tags_list_css_o_tags']    = 'default style';
 $lang['tags_list_css_o_tagstop'] = 'optimized for tags list at top of page';
 
+$lang['redirect_on_single']      = 'Redirect to page if there is only one search result';
 
 //Setup VIM: ex: et ts=2 :

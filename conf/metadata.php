@@ -16,5 +16,6 @@ $meta['toolbar_icon']       = array('onoff');
 $meta['list_tags_of_subns'] = array('onoff');
 $meta['tags_list_css']      = array('multichoice',
                                     '_choices' => array('tags', 'tagstop'));
+$meta['redirect_on_single'] = array('onoff');
 
 //Setup VIM: ex: et ts=2 :

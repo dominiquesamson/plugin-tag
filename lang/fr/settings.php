@@ -2,7 +2,7 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
  * @author Damien Raude-Morvan <drazzib@drazzib.com>
  * @author Stanislas Reltgen <stanislas@reltgen.net>
  * @author NicolasFriedli <nicolas@theologique.ch>
@@ -25,3 +25,4 @@ $lang['list_tags_of_subns']    = 'Lister les tags présents aussi dans les sous-
 $lang['tags_list_css']         = 'Style appliqué à la liste de tags des pages';
 $lang['tags_list_css_o_tags']  = 'style par défaut';
 $lang['tags_list_css_o_tagstop'] = 'optimisé pour les listes de tags en haut de page';
+$lang['redirect_on_single']      = 'Rediriger vers la page s\'il n\'y a qu\'un seul résultat de recherche';

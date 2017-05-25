@@ -13,7 +13,7 @@ if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
  * Action part of the tag plugin, handles tag display and index updates
  */
 class action_plugin_tag extends DokuWiki_Action_Plugin {
-
+    private $_pages;
     /**
      * register the eventhandlers
      *
@@ -61,6 +61,19 @@ class action_plugin_tag extends DokuWiki_Action_Plugin {
     function _handle_act(Doku_Event $event, $param) {
         if($event->data != 'showtag') return;
         $event->preventDefault();
+
+        $tagns = $this->getConf('namespace');
+        $flags = explode(',', str_replace(" ", "", $this->getConf('pagelist_flags')));
+
+        $tag   = trim(str_replace($this->getConf('namespace').':', '', $_REQUEST['tag']));
+        $ns    = trim($_REQUEST['ns']);
+
+        /* @var helper_plugin_tag $helper */
+        if ($helper = $this->loadHelper('tag')) $this->_pages = $helper->getTopic($ns, '', $tag);
+
+        if ($this->getConf('redirect_on_single') && count($this->_pages) === 1) {
+            $this->redirect_to_page(array_values($this->_pages)[0]);
+        }
     }
 
     /**
@@ -75,17 +88,7 @@ class action_plugin_tag extends DokuWiki_Action_Plugin {
         if($event->data != 'showtag') return;
         $event->preventDefault();
 
-        $tagns = $this->getConf('namespace');
-        $flags = explode(',', str_replace(" ", "", $this->getConf('pagelist_flags')));
-
-        $tag   = trim(str_replace($this->getConf('namespace').':', '', $_REQUEST['tag']));
-        $ns    = trim($_REQUEST['ns']);
-
-        /* @var helper_plugin_tag $helper */
-        if ($helper = $this->loadHelper('tag')) $pages = $helper->getTopic($ns, '', $tag);
-
-        if(!empty($pages)) {
-
+        if(!empty($this->_pages)) {
             // let Pagelist Plugin do the work for us
             if ((!$pagelist = $this->loadHelper('pagelist'))) {
                 return false;
@@ -94,20 +97,20 @@ class action_plugin_tag extends DokuWiki_Action_Plugin {
             /* @var helper_plugin_pagelist $pagelist */
             $pagelist->setFlags($flags);
             $pagelist->startList();
-            foreach ($pages as $page) {
+            foreach ($this->_pages as $page) {
                 $pagelist->addPage($page);
             }
 
             print '<h1>TAG: ' . hsc(str_replace('_', ' ', $_REQUEST['tag'])) . '</h1>' . DOKU_LF;
             print '<div class="level1">' . DOKU_LF;
-            print $pagelist->finishList();      
+            print $pagelist->finishList();
             print '</div>' . DOKU_LF;
 
         } else {
             print '<div class="level1"><p>' . $lang['nothingfound'] . '</p></div>';
         }
     }
-    
+
 	/**
 	 * Inserts the tag toolbar button
 	 */
@@ -120,7 +123,7 @@ class action_plugin_tag extends DokuWiki_Action_Plugin {
 	    	'close' => '}}'
 	    );
 	}
-	
+
 	/**
 	 * Prevent displaying underscores instead of blanks inside the page keywords
 	 */
@@ -136,8 +139,16 @@ class action_plugin_tag extends DokuWiki_Action_Plugin {
 	        if($meta['name'] == 'keywords') {
 	            $meta['content'] = str_replace('_', ' ', $meta['content']);
 	        }
-	    }	    
+	    }
 	}
+
+  /**
+   *  Redirect to page
+   */
+   function redirect_to_page($page) {
+       header("HTTP/1.1 302 Moved Temporarily");
+       send_redirect(wl($page['id']));
+   }
 }
 
 // vim:ts=4:sw=4:et:
